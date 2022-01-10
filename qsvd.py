@@ -34,7 +34,7 @@ def newMat_3(x, Ut,Lt,Vt):
     for i in range(Ut.shape[0]):
       U_new[i][0] = np.cos(x[i]) / l0
       U_new[i][1] = (np.sin(x[i]) / l1) * (np.cos(x[i+Ut.shape[0]]) / l1) * np.exp(1j*x[i+2*Ut.shape[0]])
-      U_new[i][2] = (np.sin(x[i]) / l2) * (np.sin(x[i+Ut.shape[0]]) / l2) * np.exp(1j*x[i+2*Ut.shape[0]])
+      U_new[i][2] = (np.sin(x[i]) / l2) * (np.sin(x[i+Ut.shape[0]]) / l2) * np.exp(1j*x[i+3*Ut.shape[0]])
     return np.dot(np.dot(U_new,np.diag(Lt)), Vt)
 
 
@@ -45,7 +45,7 @@ def newMat_4(x, Ut,Lt,Vt):
       U_new[i][0] = (np.cos(x[i]) / l0) * (np.cos(x[i+Ut.shape[0]]) / l0)
       U_new[i][1] = (np.cos(x[i]) / l1) * (np.sin(x[i+Ut.shape[0]]) / l1) * np.exp(1j*x[i+2*Ut.shape[0]])
       U_new[i][2] = (np.sin(x[i]) / l2) * (np.cos(x[i+Ut.shape[0]]) / l2) * np.exp(1j*x[i+3*Ut.shape[0]])
-      U_new[i][3] = (np.sin(x[i]) / l3) * (np.sin(x[i+Ut.shape[0]]) / l3) * np.exp(1j*x[i+3*Ut.shape[0]])
+      U_new[i][3] = (np.sin(x[i]) / l3) * (np.sin(x[i+Ut.shape[0]]) / l3) * np.exp(1j*x[i+4*Ut.shape[0]])
     return np.dot(np.dot(U_new,np.diag(Lt)), Vt)
 
 
@@ -78,7 +78,7 @@ def calcResults(p, q, k):
           for j in range(m): A[j] /= sum(A[j])
           B = np.sqrt(A)
           U, L, V = np.linalg.svd(B, full_matrices=False)
-          initial_guess = np.ones((m*k,), dtype=np.longdouble)
+          initial_guess = np.ones((2*m*(k-1),), dtype=np.longdouble)
           Ut = U[:, :k]
           Vt = V[:k]
           Lt = L[:k]
@@ -148,9 +148,9 @@ def main():
   final_arr_4.to_pickle("./final_arr_4.pkl")
 
   """ Load Results """
-  final_arr_2 = pd.read_pickle("./final_arr_2.pkl")
-  final_arr_3 = pd.read_pickle("./final_arr_3.pkl")
-  final_arr_4 = pd.read_pickle("./final_arr_4.pkl")
+  #final_arr_2 = pd.read_pickle("./final_arr_2.pkl")
+  #final_arr_3 = pd.read_pickle("./final_arr_3.pkl")
+  #final_arr_4 = pd.read_pickle("./final_arr_4.pkl")
 
   """ Print Results """ 
   printResults(final_arr_2, k=2)
