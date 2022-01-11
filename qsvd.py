@@ -33,8 +33,8 @@ def newMat_3(x, Ut,Lt,Vt):
     U_new = np.zeros((Ut.shape), dtype=np.cfloat)
     for i in range(Ut.shape[0]):
       U_new[i][0] = np.cos(x[i]) / l0
-      U_new[i][1] = (np.sin(x[i]) / l1) * (np.cos(x[i+Ut.shape[0]]) / l1) * np.exp(1j*x[i+2*Ut.shape[0]])
-      U_new[i][2] = (np.sin(x[i]) / l2) * (np.sin(x[i+Ut.shape[0]]) / l2) * np.exp(1j*x[i+3*Ut.shape[0]])
+      U_new[i][1] = (np.sin(x[i]) / l1) * (np.cos(x[i+Ut.shape[0]])) * np.exp(1j*x[i+2*Ut.shape[0]])
+      U_new[i][2] = (np.sin(x[i]) / l2) * (np.sin(x[i+Ut.shape[0]])) * np.exp(1j*x[i+3*Ut.shape[0]])
     return np.dot(np.dot(U_new,np.diag(Lt)), Vt)
 
 
@@ -42,10 +42,10 @@ def newMat_4(x, Ut,Lt,Vt):
     l0,l1,l2,l3 = Lt[0], Lt[1], Lt[2], Lt[3]
     U_new = np.zeros((Ut.shape), dtype=np.cfloat)
     for i in range(Ut.shape[0]):
-      U_new[i][0] = (np.cos(x[i]) / l0) * (np.cos(x[i+Ut.shape[0]]) / l0)
-      U_new[i][1] = (np.cos(x[i]) / l1) * (np.sin(x[i+Ut.shape[0]]) / l1) * np.exp(1j*x[i+2*Ut.shape[0]])
-      U_new[i][2] = (np.sin(x[i]) / l2) * (np.cos(x[i+Ut.shape[0]]) / l2) * np.exp(1j*x[i+3*Ut.shape[0]])
-      U_new[i][3] = (np.sin(x[i]) / l3) * (np.sin(x[i+Ut.shape[0]]) / l3) * np.exp(1j*x[i+4*Ut.shape[0]])
+      U_new[i][0] = (np.cos(x[i]) / l0) * (np.cos(x[i+Ut.shape[0]]))
+      U_new[i][1] = (np.cos(x[i]) / l1) * (np.sin(x[i+Ut.shape[0]])) * np.exp(1j*x[i+3*Ut.shape[0]])
+      U_new[i][2] = (np.sin(x[i]) / l2) * (np.cos(x[i+2*Ut.shape[0]])) * np.exp(1j*x[i+4*Ut.shape[0]])
+      U_new[i][3] = (np.sin(x[i]) / l3) * (np.sin(x[i+2*Ut.shape[0]])) * np.exp(1j*x[i+5*Ut.shape[0]])
     return np.dot(np.dot(U_new,np.diag(Lt)), Vt)
 
 
@@ -72,8 +72,8 @@ def calcResults(p, q, k):
   for m in range(k+1, 11):
     for n in range(k+1, 11):
       print("m = ",m,", n = ",n)
-      res = np.zeros((10,2))
-      for i in range(10):
+      res = np.zeros((100,2))
+      for i in range(100):
           A = np.random.rand(m, n)
           for j in range(m): A[j] /= sum(A[j])
           B = np.sqrt(A)
@@ -87,8 +87,8 @@ def calcResults(p, q, k):
                                       tol=1e-10, method='Nelder-Mead', options={'maxiter':1e+10})
           res[i][0] = (np.linalg.norm(B**2 - Bt**2))
           res[i][1] = costFn(result.x,Ut,Lt,Vt,B,k)
-          #if(i%10==0):
-          print(i, " ", end='')
+          if(i%10==0):
+            print(i, " ", end='')
 
       """ Save sample records """
       if ((m==p) and (n==q)):
@@ -138,19 +138,19 @@ def printResults(final_arr, k):
 def main():
   """ Save Results """ 
   """ k = 2 """ 
-  final_arr_2 = calcResults(7, 5, 2)
-  final_arr_2.to_pickle("./final_arr_2.pkl")
+  #final_arr_2 = calcResults(7, 5, 2)
+  #final_arr_2.to_pickle("./final_arr_2.pkl")
   """ k = 3 """ 
-  final_arr_3 = calcResults(7, 5, 3)
-  final_arr_3.to_pickle("./final_arr_3.pkl")
+  #final_arr_3 = calcResults(7, 5, 3)
+  #final_arr_3.to_pickle("./final_arr_3.pkl")
   """ k = 4 """ 
-  final_arr_4 = calcResults(7, 5, 4)
-  final_arr_4.to_pickle("./final_arr_4.pkl")
+  #final_arr_4 = calcResults(7, 5, 4)
+  #final_arr_4.to_pickle("./final_arr_4.pkl")
 
   """ Load Results """
-  #final_arr_2 = pd.read_pickle("./final_arr_2.pkl")
-  #final_arr_3 = pd.read_pickle("./final_arr_3.pkl")
-  #final_arr_4 = pd.read_pickle("./final_arr_4.pkl")
+  final_arr_2 = pd.read_pickle("./final_arr_2.pkl")
+  final_arr_3 = pd.read_pickle("./final_arr_3.pkl")
+  final_arr_4 = pd.read_pickle("./final_arr_4.pkl")
 
   """ Print Results """ 
   printResults(final_arr_2, k=2)
