@@ -69,8 +69,8 @@ def calcResults(p, q, k):
   filename = "sample_out_" +str(k)+".csv"
   
   print("k = ", str(k))
-  for m in range(k+1, 11):
-    for n in range(k+1, 11):
+  for m in range(k+1, k+9):
+    for n in range(k+1, k+9):
       print("m = ",m,", n = ",n)
       res = np.zeros((100,2))
       for i in range(100):
@@ -114,7 +114,6 @@ def calcResults(p, q, k):
 
 """ Show Results """
 def printResults(final_arr, k):
-
   print("Results for k="+str(k))
   print("\nMean Values: \n", final_arr[['mean_RI', 'std_RI']].mean())
   print("\nMin Values: \n", final_arr[['mean_RI', 'std_RI']].min())
