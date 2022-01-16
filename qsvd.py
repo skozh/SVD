@@ -64,10 +64,9 @@ def costFn(x, Ut,Lt,Vt,B,k):
 
 
 """ Calculate Results """
-def calcResults(p, q, k):
-  final_res = []
-  filename = "sample_out_" +str(k)+".csv"
-  
+def calcResults(k, p=7, q=6):
+  final_res = np.zeros((64, 6), dtype=np.float64)
+  j = 0
   print("k = ", str(k))
   for m in range(k+1, k+9):
     for n in range(k+1, k+9):
@@ -92,6 +91,7 @@ def calcResults(p, q, k):
 
       """ Save sample records """
       if ((m==p) and (n==q)):
+        filename = "sample_out_" +str(k)+".csv"
         df = pd.DataFrame(res, columns=['Initial', 'Final'])
         df['M'] = m
         df['N'] = n
@@ -102,13 +102,12 @@ def calcResults(p, q, k):
 
       mean_initial, mean_final = res.mean(axis=0)
       ri_mean= ((mean_initial - mean_final)*100/mean_initial)
-      ri_std = np.mean(np.std(res[:,0]-res[:,1]))
-      data = {"M": m, "N": n, 
-              "mean_initial_dist": mean_initial, "mean_final_dist": mean_final,
-              "mean_RI": ri_mean, "std_RI": ri_std}
-      final_res.append(data)
+      ri_std = np.mean(np.std(res[:,0]-res[:,1])) 
+      final_res[j]= [m,n,mean_initial,mean_final,ri_mean,ri_std]
+      j+=1
       print("\n")
-  final_arr = pd.DataFrame.from_dict(final_res)
+  final_arr = pd.DataFrame(final_res, columns=["M","N", "mean_initial_dist", 
+                                                "mean_final_dist", "mean_RI", "std_RI"])
   return final_arr
 
 
@@ -137,14 +136,14 @@ def printResults(final_arr, k):
 def main():
   """ Save Results """ 
   """ k = 2 """ 
-  #final_arr_2 = calcResults(7, 5, 2)
-  #final_arr_2.to_pickle("./final_arr_2.pkl")
+  final_arr_2 = calcResults(2, 7, 5)
+  final_arr_2.to_pickle("./final_arr_2.pkl")
   """ k = 3 """ 
-  #final_arr_3 = calcResults(7, 5, 3)
-  #final_arr_3.to_pickle("./final_arr_3.pkl")
+  final_arr_3 = calcResults(3, 7, 5)
+  final_arr_3.to_pickle("./final_arr_3.pkl")
   """ k = 4 """ 
-  #final_arr_4 = calcResults(7, 5, 4)
-  #final_arr_4.to_pickle("./final_arr_4.pkl")
+  final_arr_4 = calcResults(4, 7, 5)
+  final_arr_4.to_pickle("./final_arr_4.pkl")
 
   """ Load Results """
   final_arr_2 = pd.read_pickle("./final_arr_2.pkl")
