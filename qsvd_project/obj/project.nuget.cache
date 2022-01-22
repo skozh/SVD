@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "nIn5fZpH4Xp3OA2Mbe9KVhAJD8BaOW9FLzPpqrLH6Ky5NDelGXEe+mIVZKyjxpJKOqluujAyS82FJIWGSTscIg==",
+  "success": true,
+  "projectFilePath": "/home/shyju/Downloads/qsvd_project/qsvd_project.csproj",
+  "expectedPackageFiles": [
+    "/home/shyju/.nuget/packages/mathnet.numerics/4.15.0/mathnet.numerics.4.15.0.nupkg.sha512",
+    "/home/shyju/.nuget/packages/microsoft.aspnetcore.app.ref/6.0.0/microsoft.aspnetcore.app.ref.6.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
