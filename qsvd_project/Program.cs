@@ -2,7 +2,9 @@ using System.Numerics;
 using MathNet.Numerics.Distributions;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.Optimization;
+using MathNet.Numerics.Data.Text;
 using mathnet = MathNet.Numerics.LinearAlgebra;
+
 
 class qsvd
 {
@@ -52,19 +54,21 @@ class qsvd
                                 Matrix<double> Vt, Matrix<double> Wt, Matrix<double> B, int k){
         double loss = 0;
         Matrix<Complex> Bp = newMatrix(x, Ut, Vt, Wt, k);
-        loss = ((B.ToComplex().Map(c => Complex.Multiply(Complex.Conjugate(c),c).Real)) 
-                    - (Bp.Map(c => Complex.Multiply(Complex.Conjugate(c),c).Real))).FrobeniusNorm(); 
+        loss = (B.ToComplex()- Bp).Map(c => Complex.Multiply(c,Complex.Conjugate(c))).FrobeniusNorm();
         return loss;
     }
 
 
     static void calcResults(int k){
         int start = k+1;
-        int end = k+9;
+        int end = k+9;   
         Parallel.For(start, end, m => {
             Parallel.For(start, end, n => {
-                double[,] res= new double[10,2];
-                for (int i=0; i<10; i++){
+                Matrix<double> res = Matrix<double>.Build.Dense(100,4);
+                for (int i=0; i<100; i++){
+
+                    res[i,0] = m;
+                    res[i,1] = n;
 
                     //Calculate SVD
                     Matrix<double> A = Matrix<double>.Build.Random(m, n, new ContinuousUniform(0,1));
@@ -79,12 +83,11 @@ class qsvd
                     Matrix<double> Bt = Ut * Wt * Vt;
 
                     //Loss 1
-                    res[i,0] = (B.ToComplex().Map(c => Complex.Multiply(Complex.Conjugate(c),c).Real)
-                                -Bt.ToComplex().Map(c => Complex.Multiply(Complex.Conjugate(c),c).Real)).FrobeniusNorm();
+                    res[i, 2] = (B-Bt).Map(c => c*c).FrobeniusNorm();
 
                     //Optimization
                     int size = 2*m*(k-1);
-                    mathnet.Vector<double> initial_guess = 0.9*mathnet.Vector<double>.Build.Dense(size);
+                    mathnet.Vector<double> initial_guess = 1*mathnet.Vector<double>.Build.Dense(size);
                     var f1 = new Func<mathnet.Vector<double>, double>(x => costFunction(x, Ut, Vt, Wt, B, k));
                     var obj = ObjectiveFunction.Value(f1);
                     var solver = new NelderMeadSimplex(1e-20, 100000);
@@ -92,20 +95,22 @@ class qsvd
                     //Loss 2                    
                     try{
                         var result= solver.FindMinimum(obj, initial_guess);
-                        res[i,1] = costFunction(result.MinimizingPoint, Ut, Vt, Wt, B, k);
+                        res[i, 3] = costFunction(result.MinimizingPoint, Ut, Vt, Wt, B, k);
                     }
                     catch{
-                        res[i,1] = costFunction(initial_guess, Ut, Vt, Wt, B, k);
+                        res[i, 3] = costFunction(initial_guess, Ut, Vt, Wt, B, k);
                     }
                     Console.WriteLine("M={0}, N={1}, Thread={2}", m, n, Thread.CurrentThread.ManagedThreadId);
-                    Console.WriteLine(res[i,0].ToString() +" --> "+ res[i,1].ToString());
+                    Console.WriteLine(res[i, 2].ToString() +" --> "+ res[i, 3].ToString());
                 }
+                String filename = string.Format("data_k{0}/{1}_{2}.csv", k.ToString(), m.ToString(), n.ToString());
+                DelimitedWriter.Write(filename, res, ","); 
             });
-        });   
+        });
     }
 
 
     static void Main(string[] args){
-        calcResults(2);  
+        calcResults(2);
     }
 }

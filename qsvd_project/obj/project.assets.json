@@ -10,6 +10,18 @@
         "runtime": {
           "lib/netstandard2.0/MathNet.Numerics.dll": {}
         }
+      },
+      "MathNet.Numerics.Data.Text/4.1.0": {
+        "type": "package",
+        "dependencies": {
+          "MathNet.Numerics": "4.12.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/MathNet.Numerics.Data.Text.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/MathNet.Numerics.Data.Text.dll": {}
+        }
       }
     }
   },
@@ -33,11 +45,32 @@
         "mathnet.numerics.4.15.0.nupkg.sha512",
         "mathnet.numerics.nuspec"
       ]
+    },
+    "MathNet.Numerics.Data.Text/4.1.0": {
+      "sha512": "QMjujKAo6E1KewP0Z0PqHZ8Vzd5EQzX+zpGzoLsNNj3oEVUXMQVf/JxhVXfojSlsvoZq4GCDUarVzNgQqTzfng==",
+      "type": "package",
+      "path": "mathnet.numerics.data.text/4.1.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "icon.png",
+        "lib/net40/MathNet.Numerics.Data.Text.dll",
+        "lib/net40/MathNet.Numerics.Data.Text.xml",
+        "lib/net461/MathNet.Numerics.Data.Text.dll",
+        "lib/net461/MathNet.Numerics.Data.Text.xml",
+        "lib/netstandard1.3/MathNet.Numerics.Data.Text.dll",
+        "lib/netstandard1.3/MathNet.Numerics.Data.Text.xml",
+        "lib/netstandard2.0/MathNet.Numerics.Data.Text.dll",
+        "lib/netstandard2.0/MathNet.Numerics.Data.Text.xml",
+        "mathnet.numerics.data.text.4.1.0.nupkg.sha512",
+        "mathnet.numerics.data.text.nuspec"
+      ]
     }
   },
   "projectFileDependencyGroups": {
     "net6.0": [
-      "MathNet.Numerics >= 4.15.0"
+      "MathNet.Numerics >= 4.15.0",
+      "MathNet.Numerics.Data.Text >= 4.1.0"
     ]
   },
   "packageFolders": {
@@ -46,11 +79,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/shyju/Downloads/qsvd_project/qsvd_project.csproj",
+      "projectUniqueName": "/home/shyju/Downloads/SVD/qsvd_project/qsvd_project.csproj",
       "projectName": "qsvd_project",
-      "projectPath": "/home/shyju/Downloads/qsvd_project/qsvd_project.csproj",
+      "projectPath": "/home/shyju/Downloads/SVD/qsvd_project/qsvd_project.csproj",
       "packagesPath": "/home/shyju/.nuget/packages/",
-      "outputPath": "/home/shyju/Downloads/qsvd_project/obj/",
+      "outputPath": "/home/shyju/Downloads/SVD/qsvd_project/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/shyju/.nuget/NuGet/NuGet.Config"
@@ -80,6 +113,10 @@
           "MathNet.Numerics": {
             "target": "Package",
             "version": "[4.15.0, )"
+          },
+          "MathNet.Numerics.Data.Text": {
+            "target": "Package",
+            "version": "[4.1.0, )"
           }
         },
         "imports": [
