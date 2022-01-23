@@ -72,6 +72,11 @@ class qsvd
 
                     //Calculate SVD
                     Matrix<double> A = Matrix<double>.Build.Random(m, n, new ContinuousUniform(0,1));
+                    for (int p=0; p<A.RowCount;p++){
+                        for (int q=0; q<A.ColumnCount; q++){
+                            A[p,q]=(A[p,q]/A.RowSums()[p]);                
+                        }
+                    }  
                     Matrix<double> B = A.Map(c => Math.Sqrt(c));
                     var svd = B.Svd(true);
                     Matrix<double> B_org = svd.U * svd.W * svd.VT;
