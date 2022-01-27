@@ -10,11 +10,7 @@
 
 """ Import Libraries """
 import numpy as np
-import pandas as pd
 import scipy.optimize as optimize
-import matplotlib
-matplotlib.use('TkAgg')
-import matplotlib.pyplot as plt
 
 
 """ Optimization Algorithm """
@@ -64,13 +60,17 @@ def costFn(x, Ut,Lt,Vt,B,k):
 
 
 """ Calculate Results """
-def calcResults(k, p=7, q=6):
-  final_res = np.zeros((64, 6), dtype=np.float64)
-  j = 0
+def calcResults(k, a=0, b=0, c=0, d=0):
   print("k = ", str(k))
-  for m in range(k+1, k+9):
-    for n in range(k+1, k+9):
+  start1 = k+1 if a==0 else a
+  end1 = k+9 if b==0 else b
+  start2 = k+1 if c==0 else c
+  end2 = k+9 if d==0 else d
+
+  for m in range(start1, end1):
+    for n in range(start2, end2):
       print("m = ",m,", n = ",n)
+      filename= ('data/k{0}/{1}{2}.npy'.format(str(k),str(m),str(n)))
       res = np.zeros((100,2))
       for i in range(100):
           A = np.random.rand(m, n)
@@ -83,77 +83,26 @@ def calcResults(k, p=7, q=6):
           Lt = L[:k]
           Bt = np.dot(np.dot(Ut,np.diag(Lt)), Vt)
           result = optimize.minimize(fun=costFn, x0=initial_guess, args=(Ut,Lt,Vt,B,k),
-                                      tol=1e-10, method='Nelder-Mead', options={'maxiter':1e+10})
+                                      tol=1e-7, method='Nelder-Mead', options={'maxiter':1e+10})
           res[i][0] = (np.linalg.norm(B**2 - Bt**2))
           res[i][1] = costFn(result.x,Ut,Lt,Vt,B,k)
           if(i%10==0):
             print(i, " ", end='')
-
-      """ Save sample records """
-      if ((m==p) and (n==q)):
-        filename = "sample_out_" +str(k)+".csv"
-        df = pd.DataFrame(res, columns=['Initial', 'Final'])
-        df['M'] = m
-        df['N'] = n
-        df['Diff'] = (df['Initial'] - df['Final'])
-        df['RI'] = (df['Initial'] - df['Final'])*100/df['Initial']
-        df = df[['M', 'N', 'Initial', 'Final', 'Diff', 'RI']]
-        df.to_csv(filename, sep=',', index=False)
-
-      mean_initial, mean_final = res.mean(axis=0)
-      ri_mean= ((mean_initial - mean_final)*100/mean_initial)
-      ri_std = np.mean(np.std(res[:,0]-res[:,1])) 
-      final_res[j]= [m,n,mean_initial,mean_final,ri_mean,ri_std]
-      j+=1
-      print("\n")
-  final_arr = pd.DataFrame(final_res, columns=["M","N", "mean_initial_dist", 
-                                                "mean_final_dist", "mean_RI", "std_RI"])
-  return final_arr
+      np.save(filename, res)
+  return
 
 
-""" Show Results """
-def printResults(final_arr, k):
-  print("Results for k="+str(k))
-  print("\nMean Values: \n", final_arr[['mean_RI', 'std_RI']].mean())
-  print("\nMin Values: \n", final_arr[['mean_RI', 'std_RI']].min())
-  print("\nMax Values: \n", final_arr[['mean_RI', 'std_RI']].max())
-  print("\nMax Entry: \n", final_arr.iloc[final_arr['mean_RI'].idxmax()])
-  print("\nMin Entry: \n", final_arr.iloc[final_arr['mean_RI'].idxmin()])
-
-  """ Plot """
-  fig = plt.figure(figsize=(15,10))
-  ax = plt.axes(projection='3d')
-  ax.plot_trisurf(final_arr['M'], final_arr['N'], final_arr['mean_RI'],cmap=plt.cm.inferno)
-  ax.set_xlabel('M')
-  ax.set_ylabel('N')
-  ax.set_zlabel('RI%')
-  filename = "plot_"+str(k)+".png"
-  plt.savefig(filename)
-  plt.show()
 
 
 """ Main Function """
 def main():
   """ Save Results """ 
   """ k = 2 """ 
-  final_arr_2 = calcResults(2, 7, 5)
-  final_arr_2.to_pickle("./final_arr_2.pkl")
+  #calcResults(2)
   """ k = 3 """ 
-  final_arr_3 = calcResults(3, 7, 5)
-  final_arr_3.to_pickle("./final_arr_3.pkl")
+  calcResults(k=3, a=4, b=6, c=4, d=12)
   """ k = 4 """ 
-  final_arr_4 = calcResults(4, 7, 5)
-  final_arr_4.to_pickle("./final_arr_4.pkl")
-
-  """ Load Results """
-  final_arr_2 = pd.read_pickle("./final_arr_2.pkl")
-  final_arr_3 = pd.read_pickle("./final_arr_3.pkl")
-  final_arr_4 = pd.read_pickle("./final_arr_4.pkl")
-
-  """ Print Results """ 
-  printResults(final_arr_2, k=2)
-  printResults(final_arr_3, k=3)
-  printResults(final_arr_4, k=4)
+  #calcResults(4)
   
 
 if __name__=="__main__":
