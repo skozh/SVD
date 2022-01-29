@@ -70,7 +70,7 @@ def calcResults(k, a=0, b=0, c=0, d=0):
   for m in range(start1, end1):
     for n in range(start2, end2):
       print("m = ",m,", n = ",n)
-      filename= ('data/k{0}/{1}{2}.npy'.format(str(k),str(m),str(n)))
+      filename= ('data/k{0}/m{1}_n{2}.npy'.format(str(k),str(m),str(n)))
       res = np.zeros((100,2))
       for i in range(100):
           A = np.random.rand(m, n)
@@ -98,11 +98,11 @@ def calcResults(k, a=0, b=0, c=0, d=0):
 def main():
   """ Save Results """ 
   """ k = 2 """ 
-  #calcResults(2)
+  calcResults(k=2)
   """ k = 3 """ 
   calcResults(k=3, a=4, b=6, c=4, d=12)
   """ k = 4 """ 
-  #calcResults(4)
+  calcResults(k=4)
   
 
 if __name__=="__main__":
