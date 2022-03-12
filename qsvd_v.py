@@ -11,8 +11,8 @@ def findCombo():
           for n in range(k1+1, k1+9):
               k2 = (k1*(m+n-1)+2*n)/(2*n+m-1)
               if (k2%1==0):
-                  if [k1, k2, m, n] not in combo: 
-                      combo.append([k1, k2, m, n])
+                  if [k1, int(k2), m, n] not in combo: 
+                      combo.append([k1, int(k2), m, n])
   return np.array(combo, dtype=object)
 
 
@@ -59,7 +59,6 @@ def costFn(x, Ut, Vt, A, k):
 def SVD(p):
     [k, k_new, m, n] = p
     print ("m = ",m,", n = ",n)
-    k, k_new = 8,6
     res = np.zeros((100,3))
     for i in range(100):
         A = np.random.rand(m, n)
@@ -72,7 +71,6 @@ def SVD(p):
         Lt = L[:k]
         At = np.dot(np.dot(Ut,np.diag(Lt)), Vt)
         res[i][0] = (np.linalg.norm(A - At))
-
 
         # Complex SVD
         B = np.sqrt(A)
@@ -105,7 +103,6 @@ def SVD(p):
             V_new[:,col] = newMat(result.x, Vt[:, col], k_new)
         Bp = np.dot(Ut, V_new)  
         res[i][2] = (np.linalg.norm(A - np.conjugate(Bp)*Bp))
-
 
         if i%10==0: print(i, end=' ')
     print([m, n, *res.mean(axis=0)])
