@@ -93,7 +93,7 @@ def calcResults(k):
 
 
 def main():
-  calcResults(k=3)
+  calcResults(k=4)
 
 
 if __name__ == "__main__":
