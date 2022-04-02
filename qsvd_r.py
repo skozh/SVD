@@ -61,7 +61,7 @@ def SVD(mn_comb):
         At = np.dot(np.dot(Ut,np.diag(Lt)), Vt)
         res[i][0] = (np.linalg.norm(A - At))
 
-        # Complex SVD
+        # New SVD with Real V
         B = np.sqrt(A)
         U, L, V = np.linalg.svd(B, full_matrices=False)
         
